@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Girlfriend / Wife Finder 😈 FINAL+</title>
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: black;
+      font-family: Arial, sans-serif;
+      color: #e6f1ff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    /* Matrix canvas */
+    canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      opacity: 0.25;
+    }
+
+    .card {
+      position: relative;
+      z-index: 2;
+      background: rgba(10,15,30,0.9);
+      padding: 28px;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 440px;
+      text-align: center;
+      box-shadow: 0 0 25px #00eaff;
+      animation: glow 2.5s infinite alternate;
+    }
+
+    @keyframes glow {
+      from { box-shadow: 0 0 10px #00eaff; }
+      to { box-shadow: 0 0 30px #7b5cff; }
+    }
+
+    h1 {
+      color: #7df9ff;
+      text-shadow: 0 0 10px #00eaff;
+      margin-bottom: 10px;
+    }
+
+    .glitch {
+      position: relative;
+      color: #ff5c7b;
+      font-weight: bold;
+      text-shadow: 0 0 10px #ff5c7b;
+      animation: glitch 1s infinite;
+    }
+
+    @keyframes glitch {
+      0% { text-shadow: 2px 0 red, -2px 0 cyan; }
+      20% { text-shadow: -2px 0 red, 2px 0 cyan; }
+      40% { text-shadow: 2px 0 red, -2px 0 cyan; }
+      60% { text-shadow: -2px 0 red, 2px 0 cyan; }
+      100% { text-shadow: 2px 0 red, -2px 0 cyan; }
+    }
+
+    input, button {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      margin-top: 6px;
+      font-size: 15px;
+    }
+
+    input {
+      background: #0b1225;
+      color: white;
+      text-align: center;
+    }
+
+    button {
+      cursor: pointer;
+      background: linear-gradient(135deg, #00eaff, #7b5cff);
+      font-weight: bold;
+      box-shadow: 0 0 15px rgba(0,234,255,0.7);
+    }
+
+    .scanner {
+      margin-top: 12px;
+      height: 8px;
+      background: #08101f;
+      border-radius: 10px;
+      overflow: hidden;
+      display: none;
+    }
+
+    .bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #00eaff, #7b5cff);
+      transition: width 0.15s linear;
+    }
+
+    .loading, .result, .fbi, .share-row {
+      display: none;
+      margin-top: 10px;
+    }
+
+    .roast {
+      color: #ff5c7b;
+      font-weight: bold;
+      margin-top: 6px;
+    }
+
+    .vip {
+      color: #00ffb3;
+      font-weight: bold;
+      margin-top: 6px;
+    }
+
+    .fbi {
+      color: #ffd166;
+      font-weight: bold;
+    }
+
+    .share-row {
+      display: none;
+      gap: 6px;
+    }
+
+    .share-row button {
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="matrix"></canvas>
+
+  <div class="card" id="card">
+    <h1>Girlfriend / Wife Finder 😈</h1>
+    <input type="text" id="name" placeholder="Enter your name..." />
+    <button onclick="findGirl()">Find Now</button>
+
+    <div class="scanner" id="scanner">
+      <div class="bar" id="bar"></div>
+    </div>
+    <div class="loading" id="loading">Scanning... 0%</div>
+
+    <div class="result" id="result"></div>
+    <div class="fbi" id="fbiMsg">Sending your data to FBI servers… 🕵️‍♂️📡</div>
+
+    <div class="share-row" id="shareRow">
+      <button onclick="takeShot()">📸 Screenshot</button>
+      <button onclick="shareWA()">📤 Share WhatsApp</button>
+      <button onclick="resetAll()">🔁 Try Again</button>
+    </div>
+  </div>
+
+  <audio id="trollSound" src="https://assets.mixkit.co/sfx/preview/mixkit-cartoon-fail-trumpet-2069.mp3"></audio>
+  <audio id="successSound" src="https://assets.mixkit.co/sfx/preview/mixkit-video-game-win-2016.mp3"></audio>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
+  <script>
+    // Matrix rain
+    const canvas = document.getElementById("matrix");
+    const ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    const letters = "01ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const fontSize = 14;
+    const columns = canvas.width / fontSize;
+    const drops = Array(Math.floor(columns)).fill(1);
+
+    function drawMatrix() {
+      ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "#00ff9c";
+      ctx.font = fontSize + "px monospace";
+      for (let i = 0; i < drops.length; i++) {
+        const text = letters[Math.floor(Math.random() * letters.length)];
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
+        drops[i]++;
+      }
+    }
+    setInterval(drawMatrix, 33);
+
+    const roasts = [
+      "Bro thought today was his lucky day 😭",
+      "Database said: ERROR 404 – Girlfriend Not Found 😂",
+      "System crashed searching for your love life 💀",
+      "Even Google couldn't find one for you 😆",
+      "You just got emotionally hacked 🤡"
+    ];
+
+    function normalize(str) {
+      return str.toLowerCase().replace(/\s+/g, "");
+    }
+
+    function findGirl() {
+      const input = document.getElementById("name").value.trim();
+      if (!input) return alert("Enter your name first 😅");
+
+      const name = normalize(input);
+      const scanner = document.getElementById("scanner");
+      const bar = document.getElementById("bar");
+      const loading = document.getElementById("loading");
+      const result = document.getElementById("result");
+      const fbi = document.getElementById("fbiMsg");
+      const shareRow = document.getElementById("shareRow");
+
+      scanner.style.display = "block";
+      loading.style.display = "block";
+      result.style.display = "none";
+      fbi.style.display = "none";
+      shareRow.style.display = "none";
+      bar.style.width = "0%";
+
+      let percent = 0;
+      const vipNames = ["biki", "bikibaniya", "biki baniya", "ghanshyam"];
+      const isVIP = vipNames.some(v => name === normalize(v));
+
+      const interval = setInterval(() => {
+        percent += Math.floor(Math.random() * 12) + 5;
+        if (percent >= 100) percent = 100;
+
+        bar.style.width = percent + "%";
+        loading.innerText = "Scanning... " + percent + "%";
+
+        if (percent === 100) {
+          clearInterval(interval);
+          scanner.style.display = "none";
+          loading.style.display = "none";
+          result.style.display = "block";
+          shareRow.style.display = "flex";
+
+          if (isVIP) {
+            document.getElementById("successSound").play();
+            result.innerHTML = `
+              <div>Result for <b>${input}</b> ✅</div>
+              <div class="vip">
+                Congratulations 😎🔥<br>
+                You got a beautiful, sealed-pack wife 💍✨
+              </div>
+            `;
+          } else {
+            document.getElementById("trollSound").play();
+            const roast = roasts[Math.floor(Math.random() * roasts.length)];
+            result.innerHTML = `
+              <div>Result for <b>${input}</b> ❌</div>
+              <div class="roast glitch">
+                You are a fool 😜 You got used! 😂💔<br>
+                <small>${roast}</small>
+              </div>
+            `;
+            setTimeout(() => { fbi.style.display = "block"; }, 1200);
+          }
+        }
+      }, 160);
+    }
+
+    function resetAll() {
+      ["scanner","loading","result","fbiMsg","shareRow"].forEach(id=>{
+        document.getElementById(id).style.display="none";
+      });
+      document.getElementById("name").value="";
+      document.getElementById("bar").style.width="0%";
+    }
+
+    function takeShot() {
+      html2canvas(document.getElementById("card")).then(canvas => {
+        const link = document.createElement("a");
+        link.download = "prank-result.png";
+        link.href = canvas.toDataURL();
+        link.click();
+      });
+    }
+
+    function shareWA() {
+      const text = encodeURIComponent("😂 Try this Girlfriend/Wife Finder prank: ");
+      window.open("https://wa.me/?text=" + text, "_blank");
+    }
+  </script>
+</body>
+</html>
